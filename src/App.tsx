@@ -14,9 +14,8 @@ function App() {
     const loadCoffeeData = async () => {
       try {
         const data = await fetchCoffeeData();
-        setCoffeeList(data); // Set the state with the fetched data
+        setCoffeeList(data);
         setLoading(false);
-        console.log(coffeeList);
       } catch (error: any) {
         console.error("There was a problem with the fetch operation:", error);
         setError(error.message);
@@ -30,40 +29,38 @@ function App() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const filteredCoffeeList = coffeeList.filter((coffee) => coffee.available);
+
   return (
     <>
-      <main className="bg-dark mx-auto">
-        <img src="./assets/bg-cafe.jpg" alt="cafe" />
-        <header>
-          <h1 className="text-heading">Our Collection</h1>
+      <main className="bg-dark mx-auto flex flex-col items-center justify-center max-w-sm py-24 px-8 rounded-2xl my-32">
+        <header className="text-center">
+          <h1 className="text-heading font-bold">Our Collection</h1>
           <p className="text-body">
             Introducing our Coffee Collection, a selection of unique coffees
             from different roast types and origins, expertly roasted in small
             batches and shipped fresh weekly.
           </p>
-          <nav>
-            <ul>
-              <li className="text-body text-white">All Products</li>
-              <li className="text-body text-white">Available Now</li>
+          <nav className="flex justify-center my-4">
+            <ul className="flex gap-2 font-semibold text-body text-white">
+              <li>
+                <button onClick={() => setCoffeeList(coffeeList)}>
+                  All Products
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setCoffeeList(filteredCoffeeList)}>
+                  Available Now
+                </button>
+              </li>
             </ul>
           </nav>
         </header>
-        <ul>
-          {/* {coffeeList.map((coffee) => (
-            <li key={coffee.id}>
-              <h2>{coffee.name}</h2>
-              <img src={coffee.image} alt={coffee.name} />
-              <p>Price: {coffee.price}</p>
-              <p>
-                Rating: {coffee.rating} (based on {coffee.votes} votes)
-              </p>
-              <p>{coffee.popular ? "Popular" : "Not popular"}</p>
-              <p>{coffee.available ? "Available" : "Out of stock"}</p>
-            </li>
-          ))} */}
-
+        <ul className="grid justify-center gap-16 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-4">
           {coffeeList.map((coffee) => (
-            <Card key={coffee.id} coffee={coffee} />
+            <li key={coffee.id}>
+              <Card coffee={coffee} />
+            </li>
           ))}
         </ul>
       </main>

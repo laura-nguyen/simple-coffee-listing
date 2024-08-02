@@ -4,7 +4,7 @@ export interface CoffeeItem {
   name: string;
   image: string;
   price: string; // Since price includes a dollar sign, it's a string
-  rating: number;
+  rating: number | null;
   votes: number;
   popular: boolean;
   available: boolean;
