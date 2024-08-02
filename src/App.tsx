@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { fetchCoffeeData } from "./api/coffee";
 import { CoffeeItem } from "./api/coffee";
-
 import Card from "./components/Card";
 
 function App() {
-  const [coffeeList, setCoffeeList] = useState<CoffeeItem[]>([]);
+  const [allCoffeeList, setAllCoffeeList] = useState<CoffeeItem[]>([]);
+  const [displayedCoffeeList, setDisplayedCoffeeList] = useState<CoffeeItem[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,7 +16,8 @@ function App() {
     const loadCoffeeData = async () => {
       try {
         const data = await fetchCoffeeData();
-        setCoffeeList(data);
+        setAllCoffeeList(data); // Store the full list
+        setDisplayedCoffeeList(data); // Initially display the full list
         setLoading(false);
       } catch (error: any) {
         console.error("There was a problem with the fetch operation:", error);
@@ -29,7 +32,16 @@ function App() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const filteredCoffeeList = coffeeList.filter((coffee) => coffee.available);
+  const showAllProducts = () => {
+    setDisplayedCoffeeList(allCoffeeList);
+  };
+
+  const showAvailableProducts = () => {
+    const filteredCoffeeList = allCoffeeList.filter(
+      (coffee) => coffee.available
+    );
+    setDisplayedCoffeeList(filteredCoffeeList);
+  };
 
   return (
     <>
@@ -44,12 +56,12 @@ function App() {
           <nav className="flex justify-center my-4">
             <ul className="flex gap-2 font-semibold text-body text-white">
               <li>
-                <button onClick={() => setCoffeeList(coffeeList)}>
+                <button onClick={showAllProducts} className="btn">
                   All Products
                 </button>
               </li>
               <li>
-                <button onClick={() => setCoffeeList(filteredCoffeeList)}>
+                <button onClick={showAvailableProducts} className="btn">
                   Available Now
                 </button>
               </li>
@@ -57,7 +69,7 @@ function App() {
           </nav>
         </header>
         <ul className="grid justify-center gap-16 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-4">
-          {coffeeList.map((coffee) => (
+          {displayedCoffeeList.map((coffee) => (
             <li key={coffee.id}>
               <Card coffee={coffee} />
             </li>

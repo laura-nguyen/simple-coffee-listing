@@ -16,8 +16,15 @@
   h2 {
     @apply text-heading text-white;
   }
+}
 
-  button {
-    @apply bg-grayish rounded-lg py-1.5 px-3 text-price;
+@layer components {
+  .btn {
+    @apply rounded-lg py-1.5 px-3 text-label;
+  }
+  .btn:hover,
+  .btn:focus,
+  .btn:active {
+    @apply bg-grayish;
   }
 }
