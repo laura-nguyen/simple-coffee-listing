@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-darker text-grayish text-body flex justify-center items-center font-medium;
+    @apply bg-darker text-grayish text-body flex justify-center items-center font-medium min-h-screen;
     font-family: "DM Sans", sans-serif;
     background-image: url("./assets/bg-cafe.jpg");
     background-repeat: no-repeat;
@@ -24,7 +24,7 @@
   }
   .btn:hover,
   .btn:focus,
-  .btn:active {
+  .btn.active {
     @apply bg-grayish;
   }
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { fetchCoffeeData } from "./api/coffee";
 import { CoffeeItem } from "./api/coffee";
+
 import Card from "./components/Card";
 
 function App() {
@@ -11,12 +12,13 @@ function App() {
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string>("all");
 
   useEffect(() => {
     const loadCoffeeData = async () => {
       try {
         const data = await fetchCoffeeData();
-        setAllCoffeeList(data); // Store the full list
+        setAllCoffeeList(data);
         setDisplayedCoffeeList(data); // Initially display the full list
         setLoading(false);
       } catch (error: any) {
@@ -34,6 +36,7 @@ function App() {
 
   const showAllProducts = () => {
     setDisplayedCoffeeList(allCoffeeList);
+    setActiveFilter("all");
   };
 
   const showAvailableProducts = () => {
@@ -41,11 +44,12 @@ function App() {
       (coffee) => coffee.available
     );
     setDisplayedCoffeeList(filteredCoffeeList);
+    setActiveFilter("available");
   };
 
   return (
     <>
-      <main className="bg-dark mx-auto flex flex-col items-center justify-center max-w-sm py-24 px-8 rounded-2xl my-32">
+      <main className="bg-dark mx-auto flex flex-col items-center justify-center max-w-sm  py-24 px-8 lg:p-16 xl:px-32 lg:max-w-2xl xl:max-w-4xl rounded-2xl my-32">
         <header className="text-center">
           <h1 className="text-heading font-bold">Our Collection</h1>
           <p className="text-body">
@@ -56,19 +60,27 @@ function App() {
           <nav className="flex justify-center my-4">
             <ul className="flex gap-2 font-semibold text-body text-white">
               <li>
-                <button onClick={showAllProducts} className="btn">
+                <button
+                  onClick={showAllProducts}
+                  className={`btn ${activeFilter === "all" ? "active" : ""}`}
+                >
                   All Products
                 </button>
               </li>
               <li>
-                <button onClick={showAvailableProducts} className="btn">
+                <button
+                  onClick={showAvailableProducts}
+                  className={`btn ${
+                    activeFilter === "available" ? "active" : ""
+                  }`}
+                >
                   Available Now
                 </button>
               </li>
             </ul>
           </nav>
         </header>
-        <ul className="grid justify-center gap-16 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-4">
+        <ul className="grid justify-center gap-16 grid-cols-1 lg:grid-cols-2 lg:gap-x-8 xl:grid-cols-3 mt-4">
           {displayedCoffeeList.map((coffee) => (
             <li key={coffee.id}>
               <Card coffee={coffee} />
